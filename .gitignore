@@ -49,3 +49,6 @@ nbdist/
 !*/build/*.xml
 
 
+**/mvnw
+**/mvnw.cmd
+**/.mvn
