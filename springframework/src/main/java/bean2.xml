@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <!-- set注入 -->
+    <bean id="user" class="com.cs.test02.entity.User">
+        <property name="name" value="张三"/>
+        <property name="address" value="北京"/>
+    </bean>
+
+    <!-- 构造注入 -->
+    <bean id="dog" class="com.cs.test02.entity.Dog">
+        <constructor-arg name="name" value="大黄"/>
+        <constructor-arg name="age" value="12"/>
+    </bean>
+
+    <bean id="book" class="com.cs.test02.entity.Book">
+        <!-- 注入空值 -->
+        <property name="author">
+            <null/>
+        </property>
+
+        <!-- 注入特殊值 -->
+        <property name="name">
+            <value><![CDATA[《cpp》]]></value>
+        </property>
+    </bean>
+
+    <!-- 引用注入-普通注入方式 -->
+    <bean id="userDao" class="com.cs.test02.dao.UserDao"/>
+    <bean id="userService" class="com.cs.test02.service.UserService">
+        <property name="userDao" ref="userDao"/>
+    </bean>
+
+    <!-- 引用注入-内部bean -->
+    <bean id="emp" class="com.cs.test02.entity.Emp">
+        <property name="eName" value="zhangSan"/>
+        <property name="gender" value="man"/>
+        <property name="dept">
+            <bean class="com.cs.test02.entity.Dept">
+                <property name="DName" value="dev"/>
+            </bean>
+        </property>
+    </bean>
+
+    <!-- 级联赋值一 -->
+    <bean id="emp02" class="com.cs.test02.entity.Emp">
+        <property name="eName" value="liSi"/>
+        <property name="gender" value="man"/>
+        <property name="dept" ref="dept02"/>
+    </bean>
+    <bean id="dept02" class="com.cs.test02.entity.Dept">
+        <property name="DName" value="test"/>
+    </bean>
+
+    <!-- 级联赋值二 -->
+    <!-- 这种方式要求被注入的属性实现get方法 -->
+    <bean id="emp03" class="com.cs.test02.entity.Emp">
+        <property name="eName" value="liSi"/>
+        <property name="gender" value="man"/>
+        <property name="dept" ref="dept03"/>
+        <property name="dept.DName" value="安保"/>
+    </bean>
+    <bean id="dept03" class="com.cs.test02.entity.Dept">
+        <!--        <property name="DName" value="财务"/>-->
+    </bean>
+
+
+    <!-- 注入集合属性 在集合中，可以通过ref设置属性引用一个外部bean，不做演示-->
+    <bean id="stu" class="com.cs.test02.entity.Stu">
+        <!-- 数组类型 -->
+        <property name="courses">
+            <array>
+                <value>java</value>
+                <value>c</value>
+                <value>c++</value>
+            </array>
+        </property>
+
+        <!-- list类型 -->
+        <property name="list">
+            <list>
+                <value>byte</value>
+                <value>short</value>
+                <value>int</value>
+                <value>long</value>
+            </list>
+        </property>
+        <!-- map类型 -->
+        <property name="maps">
+            <map>
+                <entry key="byte" value="1"/>
+                <entry key="short" value="2"/>
+                <entry key="int" value="4"/>
+                <entry key="long" value="8"/>
+            </map>
+        </property>
+        <!-- set类型 -->
+        <property name="sets">
+            <set>
+                <value>float</value>
+                <value>double</value>
+            </set>
+        </property>
+    </bean>
+
+    <!-- 集合注入 - 通过util命名空间提取list -->
+    <util:list id="bookList">
+        <value>java</value>
+        <value>c</value>
+        <value>c++</value>
+    </util:list>
+    <bean id="stu2" class="com.cs.test02.entity.Stu">
+        <property name="list" ref="bookList"/>
+    </bean>
+
+    <!-- 配置bean 设置name属性 -->
+    <bean id="class" name="aClass" class="com.cs.test02.entity.Class">
+        <property name="name" value="6(1)"/>
+    </bean>
+    <!-- 根据属性类型自动注入 -->
+    <bean id="student" class="com.cs.test02.entity.Student" autowire="byType"/>
+    <!-- 根据属性名自动注入 -->
+    <!--    <bean id="student" class="com.cs.test02.entity.Student" autowire="byName"/>-->
+</beans>

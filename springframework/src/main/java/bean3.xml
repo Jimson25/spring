@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 通过工厂bean创建bean可以实现返回的bean的实际类型不等于配置的备案类型 -->
+    <!-- 这里配置的是MyBean类型，但是实际上返回的是Course类型 -->
+    <bean id="myBean" class="com.cs.test03.entity.MyBean"/>
+
+    <!-- 在spring容器中的bean对象默认都是单例的，此时不论在容器中获取多少次实例都是同一个对象，
+    spring在加载配置文件时会创建一个对象，在每次获取时返回这个对象 -->
+    <bean id="singleton" class="com.cs.test03.entity.Singleton"/>
+
+    <!-- 可以通过scope="prototype" 属性配置为多实例，这种方式下每次获取对象时会创建一个新的实例对象 -->
+    <bean id="prototype" class="com.cs.test03.entity.Prototype" scope="prototype"/>
+
+
+    <!-- bean生命周期 -->
+    <bean id="orders" class="com.cs.test03.entity.Orders" init-method="initMethod" destroy-method="destroyMethod">
+        <property name="name" value="aaaaa"/>
+    </bean>
+
+    <!--  bean生命周期 - 添加后置处理器执行过程 -->
+    <bean id="postProcessObject" class="com.cs.test03.entity.MyBeanPost"/>
+
+
+    <!-- 配置数据库连接池 - 直接配置 -->
+    <bean id="dataSource1" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/ry"/>
+        <property name="username" value="root"/>
+        <property name="password" value="root"/>
+    </bean>
+
+    <context:property-placeholder location="classpath*:jdbc.properties"/>
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${prop.driverClass}"/>
+        <property name="url" value="${prop.url}"/>
+        <property name="username" value="${prop.userName}"/>
+        <property name="password" value="${prop.password}"/>
+    </bean>
+
+</beans>
