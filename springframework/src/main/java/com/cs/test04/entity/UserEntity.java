@@ -1,6 +1,6 @@
 package com.cs.test04.entity;
 
-public class UserService {
+public class UserEntity {
     private String name;
     private String age;
 
