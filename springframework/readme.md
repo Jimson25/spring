@@ -20,3 +20,7 @@ test06 - test07 ==================== Spring AOP
 test06
 > JDK动态代理实现
 
+test07
+> Spring AOP配置及操作
+
+
