@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -54,14 +56,27 @@ public class UserDaoImpl implements IUserDao {
     @Override
     public List<UserEntity> selectList(UserEntity userEntity) {
         String sql = "select * from user_info where status = ?";
-
 //        selectList01(userEntity, sql);
-
         selectList02(userEntity, sql);
-
-
         return null;
     }
+
+    @Override
+    public void batchExec(UserEntity entity) {
+        batchInsert();
+    }
+
+    private void batchInsert() {
+        String sql = "insert into user_info(user_id, username, passwd, status) values(?,?,?,?)";
+        List<Object[]> paraList = new ArrayList<>();
+        paraList.add(new String[]{"10001", "zhao", "1", "1"});
+        paraList.add(new String[]{"10002", "qian", "1", "1"});
+        paraList.add(new String[]{"10003", "sun", "1", "1"});
+        paraList.add(new String[]{"10004", "li", "1", "1"});
+        int[] nums = jdbcTemplate.batchUpdate(sql, paraList);
+        System.out.println(Arrays.toString(nums));
+    }
+
 
     /**
      * 这个方法会查询所有的数据,

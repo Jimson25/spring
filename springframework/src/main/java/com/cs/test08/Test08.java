@@ -70,4 +70,13 @@ public class Test08 {
         dao.selectList(entity);
     }
 
+    @Test
+    public void testBatchExec() {
+        UserEntity entity = new UserEntity();
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
+        IUserDao dao = context.getBean("userDaoImpl", IUserDao.class);
+        dao.batchExec(entity);
+    }
+
+
 }

@@ -15,4 +15,7 @@ public interface IUserDao {
 
     List<UserEntity> selectList(UserEntity userEntity);
 
+    void batchExec(UserEntity entity);
+
+
 }
