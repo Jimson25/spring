@@ -23,6 +23,8 @@ public class SpringConfig {
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate();
         jdbcTemplate.setDataSource(dataSource);
+        // 这里可以设置jdbc的一些属性，如超时时间等
+        jdbcTemplate.setQueryTimeout(30);
         return jdbcTemplate;
     }
 }

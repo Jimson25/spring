@@ -37,4 +37,14 @@ public class UserEntity {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "userId='" + userId + '\'' +
+                ", username='" + username + '\'' +
+                ", passwd='" + passwd + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }

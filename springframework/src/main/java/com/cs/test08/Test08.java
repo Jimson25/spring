@@ -13,6 +13,9 @@ public class Test08 {
     public void test01() {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
         JdbcTemplate jdbcTemplate = context.getBean("jdbcTemplate", JdbcTemplate.class);
+        Integer integer = jdbcTemplate.queryForObject("select count(*) from user_info where user_id = ? ", Integer.class, "00001");
+        System.out.println(integer);
+        System.out.println(jdbcTemplate.getQueryTimeout());
     }
 
     @Test
@@ -48,4 +51,23 @@ public class Test08 {
         IUserDao dao = context.getBean("userDaoImpl", IUserDao.class);
         dao.delete(entity);
     }
+
+    @Test
+    public void testSelectOne() {
+        UserEntity entity = new UserEntity();
+        entity.setUserId("00001");
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
+        IUserDao dao = context.getBean("userDaoImpl", IUserDao.class);
+        System.out.println(dao.selectOne(entity));
+    }
+
+    @Test
+    public void testSelectList() {
+        UserEntity entity = new UserEntity();
+        entity.setStatus("1");
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
+        IUserDao dao = context.getBean("userDaoImpl", IUserDao.class);
+        dao.selectList(entity);
+    }
+
 }
