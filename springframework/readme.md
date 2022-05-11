@@ -23,4 +23,12 @@ test06
 test07
 > Spring AOP配置及操作
 
+test08 ==================== Spring jdbcTemplate
+test08
+> JdbcTemplate
+
+test09 ==================== Spring Transaction
+test09
+> Transaction
+
 
