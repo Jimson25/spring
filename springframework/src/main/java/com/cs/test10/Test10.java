@@ -2,9 +2,7 @@ package com.cs.test10;
 
 import com.cs.test10.entity.UserEntity;
 import org.junit.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.lang.Nullable;
 
 public class Test10 {
     @Test
