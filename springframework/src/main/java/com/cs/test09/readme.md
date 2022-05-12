@@ -51,3 +51,6 @@ public class UserDaoImpl{
 - Propagation.NESTED
 > 如果有事务在运行，当前方法应该在这个事务的嵌套事务内运行，否则就启动一个新的事务并在新的事务中运行
 
+#### Isolation属性取值
+- Isolation.DEFAULT
+> 
