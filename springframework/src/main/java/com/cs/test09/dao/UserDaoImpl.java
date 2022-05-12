@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,18 +21,40 @@ public class UserDaoImpl implements IUserDao {
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public int insert(UserEntity userEntity) {
+    @Transactional(propagation = Propagation.SUPPORTS, rollbackFor = Exception.class)
+    public int insert(UserEntity userEntity) throws Exception {
         String sql = "insert into user_info (username,passwd,user_id,status) values (?,?,?,?)";
-        return jdbcTemplate.update(sql, userEntity.getUsername(), userEntity.getPasswd(), userEntity.getUserId(), userEntity.getStatus());
+        int update = jdbcTemplate.update(sql, userEntity.getUsername(), userEntity.getPasswd(), userEntity.getUserId(), userEntity.getStatus());
+        if (update == 1) {
+            throw new Exception();
+        }
+        return -1;
     }
 
     @Override
-    public int delete(UserEntity userEntity) {
+    @Transactional(propagation = Propagation.NOT_SUPPORTED, rollbackFor = Exception.class)
+    public int insert2(UserEntity userEntity) throws Exception {
+        String sql = "insert into user_info (username,passwd,user_id,status) values (?,?,?,?)";
+        int update = jdbcTemplate.update(sql, userEntity.getUsername(), userEntity.getPasswd(), userEntity.getUserId(), userEntity.getStatus());
+        if (update == 1) {
+            throw new Exception();
+        }
+        return -1;
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public int delete(UserEntity userEntity) throws Exception {
         String sql = "delete from user_info where user_id = ?";
-        return jdbcTemplate.update(sql, userEntity.getUserId());
+        int update = jdbcTemplate.update(sql, userEntity.getUserId());
+        if (update == 1){
+            throw new Exception();
+        }
+        return -1;
     }
 
     @Override
+    @Transactional(propagation = Propagation.MANDATORY, rollbackFor = Exception.class)
     public int update(UserEntity userEntity) {
         String sql = "update user_info set username=?,passwd=?,status=? where user_id = ?";
         return jdbcTemplate.update(sql, userEntity.getUsername(), userEntity.getPasswd(), userEntity.getStatus(), userEntity.getUserId());

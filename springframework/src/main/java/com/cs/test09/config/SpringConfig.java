@@ -12,8 +12,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 
 @Configuration
-@ComponentScan(basePackages = "com.cs.test09.*")
+// 开启事务管理，该注解会从容器中查找PlatformTransactionManager接口的实现类配置为默认事务管理器
 @EnableTransactionManagement
+@ComponentScan(basePackages = "com.cs.test09.*")
 public class SpringConfig {
     @Bean
     public DruidDataSource dataSource() {

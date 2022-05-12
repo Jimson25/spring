@@ -14,8 +14,15 @@ public class UserServiceImpl implements IUserService {
     private IUserDao userDao;
 
     @Override
-    public int insert(UserEntity userEntity) {
+//    @Transactional
+    public int insert(UserEntity userEntity) throws Exception {
         return userDao.insert(userEntity);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int insert2(UserEntity userEntity) throws Exception {
+        return userDao.insert2(userEntity);
     }
 
     @Override
@@ -29,6 +36,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int update(UserEntity userEntity) {
         return userDao.update(userEntity);
     }
