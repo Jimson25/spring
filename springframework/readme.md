@@ -29,6 +29,6 @@ test08
 
 test09 ==================== Spring Transaction
 test09
-> Transaction
+> Transaction + log4j2
 
 
