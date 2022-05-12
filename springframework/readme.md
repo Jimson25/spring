@@ -31,4 +31,8 @@ test09 ==================== Spring Transaction
 test09
 > Transaction + log4j2
 
+test10 ==================== Spring 支持java8
+test10
+> 函数式编程 + junit5
+
 
