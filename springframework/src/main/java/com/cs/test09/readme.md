@@ -53,4 +53,3 @@ public class UserDaoImpl{
 
 #### Isolation属性取值
 - Isolation.DEFAULT
-> 
