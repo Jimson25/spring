@@ -8,6 +8,16 @@ public class UserEntity implements Serializable {
     private String passwd;
     private String status;
 
+    public UserEntity() {
+    }
+
+    public UserEntity(String userId, String username, String passwd, String status) {
+        this.userId = userId;
+        this.username = username;
+        this.passwd = passwd;
+        this.status = status;
+    }
+
     public String getUserId() {
         return userId;
     }
