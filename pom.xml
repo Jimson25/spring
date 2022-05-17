@@ -12,6 +12,7 @@
         <module>springframework</module>
         <module>Demo</module>
         <module>Demo/activemq-test</module>
+        <module>spring-boot</module>
     </modules>
 
     <properties>
