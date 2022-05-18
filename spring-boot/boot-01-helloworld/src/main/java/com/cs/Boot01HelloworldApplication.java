@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 
+import java.util.Arrays;
+
 @SpringBootApplication
 public class Boot01HelloworldApplication {
 
@@ -16,6 +18,10 @@ public class Boot01HelloworldApplication {
         Pet pet = context.getBean("pet", Pet.class);
         System.out.println(user1.getPet() == pet);
 
+        System.out.println("=========================");
+        String[] beanNamesForType = context.getBeanNamesForType(UserEntity.class);
+
+        Arrays.stream(beanNamesForType).forEach(System.out::println);
     }
 
 }
