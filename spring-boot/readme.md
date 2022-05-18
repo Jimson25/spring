@@ -119,7 +119,9 @@ public class Car {
     // Getter/Setter
 }
 ```
-
+在按照上述方式配置完之后可以在配置文件中为属性赋值，但是此时在配置文件中配置相关属性时是没有提示的。
+此时可以引入spring-boot-configuration-processor依赖，之后重新编译项目，在配置文件配置相关属性就会有提示信息。
+添加上述依赖项之后查看编译输出目录文件可以看到，在META-INF目录下生成了spring-configuration-metadata.json文件，该文件中即配置文件相关属性
 ```xml
 
 <dependency>
@@ -128,10 +130,6 @@ public class Car {
     <optional>true</optional>
 </dependency>
 ```
-
-在按照上述方式配置完之后可以在配置文件中为属性赋值，但是此时在配置文件中配置相关属性时是没有提示的。
-此时可以引入spring-boot-configuration-processor依赖，之后重新编译项目，在配置文件配置相关属性就会有提示信息。
-添加上述依赖项之后查看编译输出目录文件可以看到，在META-INF目录下生成了spring-configuration-metadata.json文件，该文件中即配置文件相关属性
 ---
 上面的功能也可以使用 @EnableConfigurationProperties(Car.class) 实现。@EnableConfigurationProperties注解需要添加在配置类上，
 在参数中需要传入做配置绑定的类，要求传入的类必须被@ConfigurationProperties
