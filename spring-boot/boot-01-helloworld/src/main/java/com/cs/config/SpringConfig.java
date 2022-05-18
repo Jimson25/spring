@@ -1,9 +1,11 @@
 package com.cs.config;
 
+import com.cs.entity.Car;
 import com.cs.entity.Pet;
 import com.cs.entity.UserEntity;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +26,7 @@ import org.springframework.context.annotation.Import;
  * 用于导入一个组件到容器中
  */
 @Import({UserEntity.class})
+@EnableConfigurationProperties(Car.class)
 public class SpringConfig {
 
     @Bean
