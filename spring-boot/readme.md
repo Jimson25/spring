@@ -91,3 +91,36 @@ public class Boot01HelloworldApplication {
     }
 }
 ```
+
+#### @ConfigurationProperties
+@ConfigurationProperties用于将类中的属性与配置文件绑定，该注解修饰的类必须是spring的一个组件。
+当一个组件被该注解修饰后，可以通过在配置文件中按{prefix}.{field}来设置类中的属性值。如在下面的代码中，可以在配置文件中使用car.name=xxx为其中的name属性赋值
+```java
+@Component
+@ConfigurationProperties(prefix = "car")
+public class Car {
+
+    /**
+     * name of car
+     */
+    private String name;
+    /**
+     * price of car
+     */
+    private String price;
+
+    // Getter/Setter
+}
+```
+---
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-configuration-processor</artifactId>
+    <optional>true</optional>
+</dependency>
+```
+在按照上述方式配置完之后可以在配置文件中为属性赋值，但是此时在配置文件中配置相关属性时是没有提示的。
+此时可以引入spring-boot-configuration-processor依赖，之后重新编译项目，在配置文件配置相关属性就会有提示信息。
+添加上述依赖项之后查看编译输出目录文件可以看到，在META-INF目录下生成了spring-configuration-metadata.json文件，该文件中即配置文件相关属性
+
