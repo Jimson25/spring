@@ -188,9 +188,9 @@ org/springframework/boot/spring-boot/2.3.4.RELEASE/spring-boot-2.3.4.RELEASE.jar
 org/springframework/boot/spring-boot-autoconfigure/2.3.4.RELEASE/spring-boot-autoconfigure-2.3.4.RELEASE.jar!/META-INF/spring.factories
 org/springframework/spring-beans/5.2.9.RELEASE/spring-beans-5.2.9.RELEASE.jar!/META-INF/spring.factories
 ```
-将配置文件中key=v1,v2,v3···等信息中的key作为key，v1|v2|···等数据添加到一个LinkedList中。这里重点关注spring-boot-autoconfigure依赖下spring.factories文件
-中的 **org.springframework.boot.autoconfigure.EnableAutoConfiguration=** 
---- 
+
+将配置文件中key=v1,v2,v3···等信息中的key作为key，v1|v2|···等数据添加到一个LinkedList中。这里重点关注spring-boot-autoconfigure依赖下spring.factories文件中的 **org.springframework.boot.autoconfigure.EnableAutoConfiguration=** 
+
 在前面分析中，打开 @EnableAutoConfiguration 注解后导入了 AutoConfigurationImportSelector.class 类，
 其中的getAutoConfigurationEntry()方法中会调用 getCandidateConfigurations(annotationMetadata, attributes) 方法，这里会返回上面
 加载的org.springframework.boot.autoconfigure.EnableAutoConfiguration对应的LinkedList并初始化list中配置的spring配置类。
