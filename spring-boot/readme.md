@@ -297,4 +297,151 @@ public WelcomePageHandlerMapping welcomePageHandlerMapping(
 }
 ```
 
-其中创建的**WelcomePageHandlerMapping**对象中
+其中在创建**WelcomePageHandlerMapping**对象时调用的构造方法中对欢迎页进行了相关的配置。
+
+```java
+WelcomePageHandlerMapping(TemplateAvailabilityProviders templateAvailabilityProviders,
+                            ApplicationContext applicationContext, 
+                            Optional<Resource> welcomePage, 
+                            String staticPathPattern) {
+    // 判断欢迎页存在并且静态资源路径是/**
+    if (welcomePage.isPresent() && "/**".equals(staticPathPattern)) {
+        logger.info("Adding welcome page: " + welcomePage.get());
+        // 将请求转发到欢迎页
+        setRootViewName("forward:index.html");
+    }
+    // 欢迎页模板存在
+    else if (welcomeTemplateExists(templateAvailabilityProviders, applicationContext)) {
+        logger.info("Adding welcome page template: index");
+        setRootViewName("index");
+    }
+}
+```
+
+### （三）请求参数处理
+
+#### 1. 请求映射
+
+##### 1）rest请求使用与原理
+
+在rest风格中，使用不同的请求方式表示对资源不同类型的操作。如在之前对于增删改查需要新增需要定义对应的requestmapping，而在rest风格下只需要在不同的操作下发送对应类型的http请求即可。其中，GET对应查询，POST对应新增，DELETE对应删除，PUT对应修改。
+
+如果使用表单提交，对于get请求需要将表单提交类型设置为get，其他三种类型需要设置为post。此时get和post请求可以正常解析，而如果要解析put和delete请求，还需要在表单中添加一个name为**_method** 的隐藏参数，该参数的值为真实提交类型。
+
+```html
+<form action="/user" method="get">
+    <input value="REST-GET 提交" type="submit"/>
+</form>
+<form action="/user" method="post">
+    <input value="REST-POST 提交" type="submit"/>
+</form>
+<form action="/user" method="post">
+    <input name="_method" type="hidden" value="delete"/>
+    <input name="_m" type="hidden" value="delete"/>
+    <input value="REST-DELETE 提交" type="submit"/>
+</form>
+<form action="/user" method="post">
+    <input name="_method" type="hidden" value="PUT"/>
+    <input value="REST-PUT 提交" type="submit"/>
+</form>
+```
+
+此时页面上已经符合要求了，但是后两者提交方式下还是走的post方式，说明**_method**没有生效。因为在springmvc中我们还需要通过**hiddenHttpMethodFilter**控制开启rest的PUT和DELETE两种请求类型。
+
+在**WebMvcAutoConfiguration**中，存在一个名为**hiddenHttpMethodFilter**的bean实例，通过条件注解可以发现要加载该bean需要配置**spring.mvc.hiddenmethod.filter.enabled**值为true。在该方法中创建并返回了**OrderedHiddenHttpMethodFilter**对象，而这个继承自**HiddenHttpMethodFilter**。
+
+```java
+public class WebMvcAutoConfiguration {
+  	@Bean
+	@ConditionalOnMissingBean(HiddenHttpMethodFilter.class)
+	@ConditionalOnProperty(prefix = "spring.mvc.hiddenmethod.filter", 
+                           name = "enabled", matchIfMissing = false)
+	public OrderedHiddenHttpMethodFilter hiddenHttpMethodFilter() {
+		return new OrderedHiddenHttpMethodFilter();
+	}
+}
+
+```
+
+在**HiddenHttpMethodFilter**中配置了methodParam的值为**_method**，在其**doFilterInternal**方法中对请求对象做了如下一些处理使其能处理对应DELETE和PUT请求。
+
+```java
+public class HiddenHttpMethodFilter extends OncePerRequestFilter {
+  	private static final List<String> ALLOWED_METHODS =
+			Collections.unmodifiableList(
+      			Arrays.asList(HttpMethod.PUT.name(),
+							HttpMethod.DELETE.name(), 
+                               HttpMethod.PATCH.name()));
+  	public static final String DEFAULT_METHOD_PARAM = "_method";
+	private String methodParam = DEFAULT_METHOD_PARAM;
+  
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, 
+                                    HttpServletResponse response, 
+                                    FilterChain filterChain)
+			throws ServletException, IOException {
+
+		HttpServletRequest requestToUse = request;
+		// 判断请求类型为post并且请求没有出错
+		if ("POST".equals(request.getMethod())
+            && request.getAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE) == null) {
+          	 // 从请求中获取名为_method的参数值 
+			String paramValue = request.getParameter(this.methodParam);
+          	 // 判断值不为空
+			if (StringUtils.hasLength(paramValue)) {
+              	 // 统一将前面获取的值转为大写
+				String method = paramValue.toUpperCase(Locale.ENGLISH);
+              	 // 判断指定的类型是否包含在允许的类型(DELETE|PUT|PATCH)中
+				if (ALLOWED_METHODS.contains(method)) {
+                  	 //对请求进行包装，后面执行请求会调用这个request
+					requestToUse = new HttpMethodRequestWrapper(request, method);
+				}
+			}
+		}
+		filterChain.doFilter(requestToUse, response);
+	}
+}
+```
+
+> 修改表单中指定实际请求类型的参数名
+
+在前面分析代码过程中发现在**HiddenHttpMethodFilter**中存在**setMethodParam()**方法，通过该方法可以设置前面的参数名，且在**hiddenHttpMethodFilter**这个bean实例配置上存在条件注解**@ConditionalOnMissingBean(HiddenHttpMethodFilter.class)**，那么此时只要我们新建一个**HiddenHttpMethodFilter**类型的实例，再调用返回对象的setMethodParam方法设置我们想要的参数名，再将该实例添加到容器中即可。此时spring提供的bean将不再加载。
+
+```java
+@Configuration
+public class SpringConfiguration {
+    @Bean
+    @ConditionalOnProperty(prefix = "spring.mvc.hiddenmethod.filter", 
+                           name = "enabled", matchIfMissing = false)
+    public OrderedHiddenHttpMethodFilter hiddenHttpMethodFilter() {
+        OrderedHiddenHttpMethodFilter filter = new OrderedHiddenHttpMethodFilter();
+        filter.setMethodParam("_m");
+        return filter;
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

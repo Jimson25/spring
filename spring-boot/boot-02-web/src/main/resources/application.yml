@@ -1,12 +1,16 @@
 server:
   port: 8088
 
+#spring:
+#  mvc:
+#    static-path-pattern: resource/**
+#
+#  resources:
+#    add-mappings: true
+#    cache:
+#      period: 10000
 spring:
   mvc:
-    static-path-pattern: resource/**
-
-  resources:
-    add-mappings: true
-    cache:
-      period: 10000
-
+    hiddenmethod:
+      filter:
+        enabled: true
