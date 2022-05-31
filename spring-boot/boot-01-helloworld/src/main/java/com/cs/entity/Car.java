@@ -1,8 +1,13 @@
 package com.cs.entity;
 
+import lombok.Data;
+import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+
+@Data
+@ToString
 @Component
 @ConfigurationProperties(prefix = "car")
 public class Car {
@@ -16,27 +21,4 @@ public class Car {
      */
     private String price;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    @Override
-    public String toString() {
-        return "Car{" +
-                "name='" + name + '\'' +
-                ", price='" + price + '\'' +
-                '}';
-    }
 }

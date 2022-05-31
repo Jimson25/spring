@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.cs</groupId>
-    <artifactId>springframework</artifactId>
+    <artifactId>spring-boot</artifactId>
     <version>1.0</version>
 
     <parent>
@@ -13,7 +13,6 @@
         <artifactId>spring</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
