@@ -326,7 +326,7 @@ WelcomePageHandlerMapping(TemplateAvailabilityProviders templateAvailabilityProv
 
 在rest风格中，使用不同的请求方式表示对资源不同类型的操作。如在之前对于增删改查需要新增需要定义对应的requestmapping，而在rest风格下只需要在不同的操作下发送对应类型的http请求即可。其中，GET对应查询，POST对应新增，DELETE对应删除，PUT对应修改。
 
-如果使用表单提交，对于get请求需要将表单提交类型设置为get，其他三种类型需要设置为post。此时get和post请求可以正常解析，而如果要解析put和delete请求，还需要在表单中添加一个name为**_method** 的隐藏参数，该参数的值为真实提交类型。
+如果使用表单提交，对于get请求需要将表单提交类型设置为get，其他三种类型需要设置为post。此时get和post请求可以正常解析，而如果要解析put和delete请求，还需要在表单中添加一个name为**\_method** 的隐藏参数，该参数的值为真实提交类型。
 
 ```html
 <form action="/user" method="get">
@@ -346,7 +346,7 @@ WelcomePageHandlerMapping(TemplateAvailabilityProviders templateAvailabilityProv
 </form>
 ```
 
-此时页面上已经符合要求了，但是后两者提交方式下还是走的post方式，说明**_method**没有生效。因为在springmvc中我们还需要通过**hiddenHttpMethodFilter**控制开启rest的PUT和DELETE两种请求类型。
+此时页面上已经符合要求了，但是后两者提交方式下还是走的post方式，说明**\_method**没有生效。因为在springmvc中我们还需要通过**hiddenHttpMethodFilter**控制开启rest的PUT和DELETE两种请求类型。
 
 在**WebMvcAutoConfiguration**中，存在一个名为**hiddenHttpMethodFilter**的bean实例，通过条件注解可以发现要加载该bean需要配置**spring.mvc.hiddenmethod.filter.enabled**值为true。在该方法中创建并返回了**OrderedHiddenHttpMethodFilter**对象，而这个继承自**HiddenHttpMethodFilter**。
 
@@ -363,7 +363,7 @@ public class WebMvcAutoConfiguration {
 
 ```
 
-在**HiddenHttpMethodFilter**中配置了methodParam的值为**_method**，在其**doFilterInternal**方法中对请求对象做了如下一些处理使其能处理对应DELETE和PUT请求。
+在**HiddenHttpMethodFilter**中配置了methodParam的值为**\_method**，在其**doFilterInternal**方法中对请求对象做了如下一些处理使其能处理对应DELETE和PUT请求。
 
 ```java
 public class HiddenHttpMethodFilter extends OncePerRequestFilter {
@@ -405,7 +405,7 @@ public class HiddenHttpMethodFilter extends OncePerRequestFilter {
 
 > 修改表单中指定实际请求类型的参数名
 
-在前面分析代码过程中发现在**HiddenHttpMethodFilter**中存在**setMethodParam()**方法，通过该方法可以设置前面的参数名，且在**hiddenHttpMethodFilter**这个bean实例配置上存在条件注解**@ConditionalOnMissingBean(HiddenHttpMethodFilter.class)**，那么此时只要我们新建一个**HiddenHttpMethodFilter**类型的实例，再调用返回对象的setMethodParam方法设置我们想要的参数名，再将该实例添加到容器中即可。此时spring提供的bean将不再加载。
+在前面分析代码过程中发现在**HiddenHttpMethodFilter**中存在**setMethodParam()**方法，通过该方法可以设置前面的参数名，且在**hiddenHttpMethodFilter**这个bean实例配置上存在条件注解**@ConditionalOnMissingBean\(HiddenHttpMethodFilter\.class\)**，那么此时只要我们新建一个**HiddenHttpMethodFilter**类型的实例，再调用返回对象的setMethodParam方法设置我们想要的参数名，再将该实例添加到容器中即可。此时spring提供的bean将不再加载。
 
 ```java
 @Configuration
