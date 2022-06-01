@@ -423,6 +423,14 @@ public class SpringConfiguration {
 
 
 
+##### 2）请求映射原理
+
+在springMVC框架中，所有的请求都需要经过**DispatcherServlet**处理来找到对应的处理器。
+
+**DispatcherServlet**类顺序往上继承多个类，关系如下**DispatcherServlet** -> **FrameworkServlet** -> **HttpServletBean** -> **HttpServlet**。 
+
+在DispatcherServlet中查找doGet|doPost方法，发现其继承自FrameworkServlet的实现，其中调用了processRequest()方法。在processRequest()方法中，先是对request做了一系列的包装和处理之后最终会调用doService()方法。在DispatcherServlet类中给出了该方法的实现，同样对request做一系列包装和处理之后最后调用本类实现的doDispatch()方法，在这个方法中会为请求匹配对应的处理器。
+
 
 
 
